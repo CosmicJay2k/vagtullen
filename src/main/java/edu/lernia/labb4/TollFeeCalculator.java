@@ -9,11 +9,14 @@ import java.util.Scanner;
 
 public class TollFeeCalculator {
 
+    String[] dateStrings;
+    LocalDateTime[] dates;
+
     public TollFeeCalculator(String inputFile) {
         try {
             Scanner sc = new Scanner(new File(inputFile));
-            String[] dateStrings = sc.nextLine().split(", ");
-            LocalDateTime[] dates = new LocalDateTime[dateStrings.length - 1]; // bug?? Why minus 1?? // REMOVED
+            this.dateStrings = sc.nextLine().split(", ");
+            dates = new LocalDateTime[dateStrings.length]; // bug?? Why minus 1?? // REMOVE
             for (int i = 0; i < dates.length; i++) {
                 dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             }
