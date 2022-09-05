@@ -17,6 +17,16 @@ class TollFeeCalculatorTest {
 	LocalDateTime dateAndTime8kr = LocalDateTime.parse("2022-09-05 10:00",
 			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
+	LocalDateTime[] dates;
+	protected LocalDateTime[] mockArray;
+	{
+		String[] dateStrings = { "2022-09-05 10:13", "2022-09-05 10:25" };
+		dates = new LocalDateTime[2];
+		for (int i = 0; i < dates.length; i++) {
+			dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		}
+	}
+
 	@Test
 	@DisplayName("Test array lengths in constructor. If failed, remove minus 1 from dateStrings.length")
 	void datesArrayAndDateStringsArrayShouldBeTheSameLength() {
@@ -45,4 +55,9 @@ class TollFeeCalculatorTest {
 		assertTrue(TollFeeCalculator.getTotalFeeCost(tollFeeCalc.dates) <= 60);
 	}
 
+	@Test
+	@DisplayName("Testing getTotalFeeCost.")
+	void thisShouldNotMakeTotalFeeGoUp() {
+		assertTrue(TollFeeCalculator.getTotalFeeCost(dates) == 8);
+	}
 }

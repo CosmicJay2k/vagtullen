@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class TollFeeCalculator {
 
-    String[] dateStrings;
-    LocalDateTime[] dates;
+    String[] dateStrings; // Moved out to be able to grab them in test
+    LocalDateTime[] dates; // Moved out to be able to grab them in test
 
     public TollFeeCalculator(String inputFile) {
         try {
@@ -32,12 +32,14 @@ public class TollFeeCalculator {
         for (LocalDateTime date : dates) {
             System.out.println(date.toString());
             long diffInMinutes = intervalStart.until(date, ChronoUnit.MINUTES);
-            if (diffInMinutes > 60) {
+            System.out.println("Diff: " + diffInMinutes);
+            if (diffInMinutes > 60) { // bug around here // SOMETHING WRONG
                 totalFee += getTollFeePerPassing(date);
                 intervalStart = date;
             } else {
                 totalFee += Math.max(getTollFeePerPassing(date), getTollFeePerPassing(intervalStart));
             }
+            System.out.println(totalFee);
         }
         return Math.min(totalFee, 60); // bug here // Use min instead of max
     }
