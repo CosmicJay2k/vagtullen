@@ -9,14 +9,14 @@ import java.util.Scanner;
 
 public class TollFeeCalculator {
 
-    String[] dateStrings; // Moved out to be able to grab them in test
-    LocalDateTime[] dates; // Moved out to be able to grab them in test
+    protected String[] dateStrings; // Moved out to be able to access outside constructor
+    protected LocalDateTime[] dates; // Moved out to be able to access outside constructor
 
     public TollFeeCalculator(String inputFile) {
         try {
             Scanner sc = new Scanner(new File(inputFile));
             this.dateStrings = sc.nextLine().split(", ");
-            dates = new LocalDateTime[dateStrings.length]; // bug?? Why minus 1?? // REMOVE
+            dates = new LocalDateTime[dateStrings.length]; // bug here // Remove minus 1
             for (int i = 0; i < dates.length; i++) {
                 dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             }
@@ -32,7 +32,6 @@ public class TollFeeCalculator {
         for (LocalDateTime date : dates) {
             System.out.println(date.toString());
             long diffInMinutes = intervalStart.until(date, ChronoUnit.MINUTES);
-            System.out.println("Diff: " + diffInMinutes);
             if (diffInMinutes > 60) { // bug around here // SOMETHING WRONG
                 totalFee += getTollFeePerPassing(date);
                 intervalStart = date;
