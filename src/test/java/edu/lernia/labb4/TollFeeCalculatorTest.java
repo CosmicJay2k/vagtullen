@@ -1,45 +1,62 @@
 package edu.lernia.labb4;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 @DisplayName("Test suite")
 class TollFeeCalculatorTest {
+	static TollFeeCalculator tollFeeCalc;
+	static LocalDateTime dateFreeOfCharge;
+	static LocalDateTime dateAndTime8kr;
+	static LocalDateTime[] mockDates;
 
-	LocalDateTime dateFreeOfCharge = LocalDateTime.parse("2022-09-04 17:00",
-			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+	@BeforeAll
+	public static void setup() {
+		tollFeeCalc = new TollFeeCalculator("src/test/resources/Lab4.txt");
 
-	LocalDateTime dateAndTime8kr = LocalDateTime.parse("2022-09-05 10:00",
-			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-	LocalDateTime[] dates;
-	protected LocalDateTime[] mockArray;
-	{
-		String[] dateStrings = { "2022-09-05 10:13", "2022-09-05 10:25" };
-		dates = new LocalDateTime[2];
-		for (int i = 0; i < dates.length; i++) {
-			dates[i] = LocalDateTime.parse(dateStrings[i], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		dateFreeOfCharge = LocalDateTime.parse("2022-09-04 17:00",
+				DTF);
+
+		dateAndTime8kr = LocalDateTime.parse("2022-09-05 06:10",
+				DTF);
+
+		String[] dateStrings = { "2022-09-05 06:50", "2022-09-05 07:25" };
+		mockDates = new LocalDateTime[2];
+		for (int i = 0; i < mockDates.length; i++) {
+			mockDates[i] = LocalDateTime.parse(dateStrings[i], DTF);
 		}
+
+	}
+
+	@Test
+	@DisplayName("Testing isTollFreeDate by day(sunday) NO BUG THUS FAR, JUST TESTING")
+	void dateFreeOfChargeShouldBeTrue() {
+		assertEquals(true, TollFeeCalculator.isTollFreeDate(dateFreeOfCharge));
+	}
+
+	@Test
+	@DisplayName("Test access to dates variable. If failed, move variable out of constructor scope")
+	void datesArrayShouldBeAccessible() {
+		assertEquals(LocalDateTime[].class, tollFeeCalc.dates.getClass());
+	}
+
+	@Test
+	@DisplayName("Test access to dateStrings variable. If failed, move variable out of constructor scope")
+	void dateStringsArrayShouldBeAccessible() {
+		assertEquals(String[].class, tollFeeCalc.dateStrings.getClass());
 	}
 
 	@Test
 	@DisplayName("Test array lengths in constructor. If failed, remove minus 1 from dateStrings.length")
 	void datesArrayAndDateStringsArrayShouldBeTheSameLength() {
-		var tollFeeCalc = new TollFeeCalculator("src/test/resources/Lab4.txt");
-		var dates = tollFeeCalc.dates;
-		var dateString = tollFeeCalc.dateStrings;
-		assertTrue(dateString.length == dates.length);
-	}
-
-	@Test
-	@DisplayName("Testing isTollFreeDate by day(sunday) NO BUG THIS FAR, JUST TESTING")
-	void dateFreeOfChargeShouldBeTrue() {
-		assertEquals(true, TollFeeCalculator.isTollFreeDate(dateFreeOfCharge));
+		assertTrue(tollFeeCalc.dateStrings.length == tollFeeCalc.dates.length);
 	}
 
 	@Test
@@ -56,8 +73,8 @@ class TollFeeCalculatorTest {
 	}
 
 	@Test
-	@DisplayName("Testing getTotalFeeCost.")
-	void thisShouldNotMakeTotalFeeGoUp() {
-		assertTrue(TollFeeCalculator.getTotalFeeCost(dates) == 8);
+	@DisplayName("Testing getTotalFeeCost. Should be 18")
+	void getTotalFeeCostShouldOnlyReturnHighestFee() {
+		assertTrue(TollFeeCalculator.getTotalFeeCost(mockDates) == 18);
 	}
 }
