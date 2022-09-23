@@ -32,7 +32,11 @@ public class TollFeeCalculator {
         for (LocalDateTime date : dates) {
             System.out.println(date.toString());
             long diffInMinutes = intervalStart.until(date, ChronoUnit.MINUTES);
-            if (diffInMinutes > 60) { // bug around here // SOMETHING WRONG
+            /*
+             * I can't see a fix for the "only pay for the cheapest if within an hour"
+             * whitout rewriting logic, must be missing something...
+             */
+            if (diffInMinutes > 60) { // bug around here //
                 totalFee += getTollFeePerPassing(date);
                 intervalStart = date;
             } else {
